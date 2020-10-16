@@ -51,6 +51,12 @@ public class CacheConfiguration {
             createCache(cm, de.bildwerk.bwmanagement.domain.User.class.getName());
             createCache(cm, de.bildwerk.bwmanagement.domain.Authority.class.getName());
             createCache(cm, de.bildwerk.bwmanagement.domain.User.class.getName() + ".authorities");
+            createCache(cm, de.bildwerk.bwmanagement.domain.Item.class.getName());
+            createCache(cm, de.bildwerk.bwmanagement.domain.Item.class.getName() + ".contents");
+            createCache(cm, de.bildwerk.bwmanagement.domain.Item.class.getName() + ".lettings");
+            createCache(cm, de.bildwerk.bwmanagement.domain.Content.class.getName());
+            createCache(cm, de.bildwerk.bwmanagement.domain.Assignment.class.getName());
+            createCache(cm, de.bildwerk.bwmanagement.domain.Letting.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }
