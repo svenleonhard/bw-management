@@ -27,12 +27,25 @@
         <div class="col-md-6">
             <zxing-scanner  (scanSuccess)="onCodeResult($event)"></zxing-scanner>
             <div>
-                <small>Result</small>
-                <strong>{{ qrString }}</strong>
+                <ng-container *ngIf="item != null">
+                    {{ item.description }}
+                    <dl class="row-md jh-entity-details">
+                        <dt><span jhiTranslate="bwManagementApp.item.qrCode">Qr Code</span></dt>
+                        <dd>
+                            <span>{{ item.qrCode }}</span>
+                        </dd>
+                        <dt><span jhiTranslate="bwManagementApp.item.description">Description</span></dt>
+                        <dd>
+                            <span>{{ item.description }}</span>
+                        </dd>
+                        <dt><span jhiTranslate="bwManagementApp.item.picture">Picture</span></dt>
+                        <dd>
+                            <span>{{ item.picture }}</span>
+                        </dd>
+                    </dl>
+                </ng-container>
             </div>
         </div>
-
-
 
     </div>
 </div>
