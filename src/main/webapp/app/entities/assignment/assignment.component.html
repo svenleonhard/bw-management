@@ -1,0 +1,75 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="bwManagementApp.assignment.home.title">Assignments</span>
+
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-assignment" [routerLink]="['/assignment/new']">
+            <fa-icon icon="plus"></fa-icon>
+            <span  jhiTranslate="bwManagementApp.assignment.home.createLabel">
+            Create a new Assignment
+            </span>
+        </button>
+    </h2>
+
+    <jhi-alert-error></jhi-alert-error>
+
+    <jhi-alert></jhi-alert>
+
+    <div class="alert alert-warning" id="no-result" *ngIf="assignments?.length === 0">
+        <span jhiTranslate="bwManagementApp.assignment.home.notFound">No assignments found</span>
+    </div>
+
+    <div class="table-responsive" id="entities" *ngIf="assignments && assignments.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
+            <thead>
+                <tr>
+                    <th scope="col" ><span jhiTranslate="global.field.id">ID</span></th>
+                    <th scope="col" ><span jhiTranslate="bwManagementApp.assignment.description">Description</span></th>
+                    <th scope="col" ><span jhiTranslate="bwManagementApp.assignment.comment">Comment</span></th>
+                    <th scope="col" ><span jhiTranslate="bwManagementApp.assignment.boxItem">Box Item</span></th>
+                    <th scope="col" ><span jhiTranslate="bwManagementApp.assignment.box">Box</span></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let assignment of assignments ;trackBy: trackId">
+                    <td><a [routerLink]="['/assignment', assignment.id, 'view']">{{ assignment.id }}</a></td>
+                    <td>{{ assignment.description }}</td>
+                    <td>{{ assignment.comment }}</td>
+                    <td>
+                        <div *ngIf="assignment.boxItem">
+                            <a [routerLink]="['/item', assignment.boxItem?.id, 'view']" >{{ assignment.boxItem?.id }}</a>
+                        </div>
+                    </td>
+                    <td>
+                        <div *ngIf="assignment.box">
+                            <a [routerLink]="['/item', assignment.box?.id, 'view']" >{{ assignment.box?.id }}</a>
+                        </div>
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group">
+                            <button type="submit"
+                                    [routerLink]="['/assignment', assignment.id, 'view']"
+                                    class="btn btn-info btn-sm">
+                                <fa-icon icon="eye"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                            </button>
+
+                            <button type="submit"
+                                    [routerLink]="['/assignment', assignment.id, 'edit']"
+                                    class="btn btn-primary btn-sm">
+                                <fa-icon icon="pencil-alt"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                            </button>
+
+                            <button type="submit" (click)="delete(assignment)"
+                                    class="btn btn-danger btn-sm">
+                                <fa-icon icon="times"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

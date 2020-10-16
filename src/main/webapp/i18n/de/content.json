@@ -1,0 +1,23 @@
+{
+  "bwManagementApp": {
+    "content": {
+      "home": {
+        "title": "Contents",
+        "createLabel": "Content erstellen",
+        "createOrEditLabel": "Content erstellen oder bearbeiten",
+        "notFound": "No Contents found"
+      },
+      "created": "Content erstellt mit ID {{ param }}",
+      "updated": "Content aktualisiert mit ID {{ param }}",
+      "deleted": "Content gelöscht mit ID {{ param }}",
+      "delete": {
+        "question": "Soll Content {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Content"
+      },
+      "description": "Description",
+      "item": "Item"
+    }
+  }
+}

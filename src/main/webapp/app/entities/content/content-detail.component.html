@@ -1,0 +1,36 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="content">
+            <h2><span jhiTranslate="bwManagementApp.content.detail.title">Content</span> {{ content.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="bwManagementApp.content.description">Description</span></dt>
+                <dd>
+                    <span>{{ content.description }}</span>
+                </dd>
+                <dt><span jhiTranslate="bwManagementApp.content.item">Item</span></dt>
+                <dd>
+                    <div *ngIf="content.item">
+                        <a [routerLink]="['/item', content.item?.id, 'view']">{{ content.item?.id }}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/content', content.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>
