@@ -13,6 +13,7 @@ import { Account } from 'app/core/user/account.model';
 export class HomeComponent implements OnInit, OnDestroy {
   account: Account | null = null;
   authSubscription?: Subscription;
+  qrString = '0';
 
   constructor(private accountService: AccountService, private loginModalService: LoginModalService) {}
 
@@ -26,6 +27,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   login(): void {
     this.loginModalService.open();
+  }
+
+  onCodeResult(qrString: string): any {
+    this.qrString = qrString;
   }
 
   ngOnDestroy(): void {
