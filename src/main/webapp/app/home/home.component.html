@@ -25,26 +25,24 @@
 
 
         <div class="col-md-6">
-            <zxing-scanner  (scanSuccess)="onCodeResult($event)"></zxing-scanner>
-            <div>
+            <jhi-qr-scanner (itemCodeSelected)="itemCodeSelected($event)"></jhi-qr-scanner>
+
                 <ng-container *ngIf="item != null">
-                    {{ item.description }}
                     <dl class="row-md jh-entity-details">
+                        <dd>
+                            <span><img [src]="picture"/></span>
+                        </dd>
                         <dt><span jhiTranslate="bwManagementApp.item.qrCode">Qr Code</span></dt>
                         <dd>
-                            <span>{{ item.qrCode }}</span>
+                            <span>{{ item.id }}</span>
                         </dd>
                         <dt><span jhiTranslate="bwManagementApp.item.description">Description</span></dt>
                         <dd>
                             <span>{{ item.description }}</span>
                         </dd>
-                        <dt><span jhiTranslate="bwManagementApp.item.picture">Picture</span></dt>
-                        <dd>
-                            <span>{{ item.picture }}</span>
-                        </dd>
+
                     </dl>
                 </ng-container>
-            </div>
         </div>
 
     </div>

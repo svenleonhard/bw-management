@@ -1,0 +1,8 @@
+<div class="row">
+    <zxing-scanner  (scanSuccess)="onCodeResult($event)"></zxing-scanner>
+    <input type="number" class="col-sm-9 mt-1 form-control" [(ngModel)]="itemId" placeholder="Please enter Item ID"/>
+    <button type="button" class="ml-1 mt-1 btn btn-primary" (click)="onCodeSelected()">
+        <fa-icon icon="search"></fa-icon>&nbsp;<span jhiTranslate="entity.action.find">Find</span>
+    </button>
+</div>
+
