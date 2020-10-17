@@ -41,8 +41,10 @@
 
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="bwManagementApp.item.picture" for="field_picture">Picture</label>
-                    <input type="text" class="form-control" name="picture" id="field_picture"
-                           formControlName="picture"/>
+                    <select class="form-control" id="field_picture" name="picture" formControlName="picture">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="imageOption.id === editForm.get('picture')!.value?.id ? editForm.get('picture')!.value : imageOption" *ngFor="let imageOption of pictures; trackBy: trackById">{{ imageOption.id }}</option>
+                    </select>
                 </div>
             </div>
 

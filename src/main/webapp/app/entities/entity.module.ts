@@ -38,6 +38,10 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access-service'
         path: 'letting',
         loadChildren: () => import('./letting/letting.module').then(m => m.BwManagementLettingModule),
       },
+      {
+        path: 'image',
+        loadChildren: () => import('./image/image.module').then(m => m.BwManagementImageModule),
+      },
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ]),
   ],

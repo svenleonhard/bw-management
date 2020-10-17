@@ -32,8 +32,9 @@ public class Item implements Serializable {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "picture")
-    private String picture;
+    @OneToOne
+    @JoinColumn(unique = true)
+    private Image picture;
 
     @OneToMany(mappedBy = "item")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -78,17 +79,17 @@ public class Item implements Serializable {
         this.description = description;
     }
 
-    public String getPicture() {
+    public Image getPicture() {
         return picture;
     }
 
-    public Item picture(String picture) {
-        this.picture = picture;
+    public Item picture(Image image) {
+        this.picture = image;
         return this;
     }
 
-    public void setPicture(String picture) {
-        this.picture = picture;
+    public void setPicture(Image image) {
+        this.picture = image;
     }
 
     public Set<Content> getContents() {
@@ -165,7 +166,6 @@ public class Item implements Serializable {
             "id=" + getId() +
             ", qrCode=" + getQrCode() +
             ", description='" + getDescription() + "'" +
-            ", picture='" + getPicture() + "'" +
             "}";
     }
 }

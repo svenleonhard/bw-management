@@ -1,15 +1,18 @@
 import { TestBed, getTestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { ItemService } from 'app/entities/item/item.service';
-import { IItem, Item } from 'app/shared/model/item.model';
+import * as moment from 'moment';
+import { DATE_FORMAT } from 'app/shared/constants/input.constants';
+import { ImageService } from 'app/entities/image/image.service';
+import { IImage, Image } from 'app/shared/model/image.model';
 
 describe('Service Tests', () => {
-  describe('Item Service', () => {
+  describe('Image Service', () => {
     let injector: TestBed;
-    let service: ItemService;
+    let service: ImageService;
     let httpMock: HttpTestingController;
-    let elemDefault: IItem;
-    let expectedResult: IItem | IItem[] | boolean | null;
+    let elemDefault: IImage;
+    let expectedResult: IImage | IImage[] | boolean | null;
+    let currentDate: moment.Moment;
 
     beforeEach(() => {
       TestBed.configureTestingModule({
@@ -17,15 +20,21 @@ describe('Service Tests', () => {
       });
       expectedResult = null;
       injector = getTestBed();
-      service = injector.get(ItemService);
+      service = injector.get(ImageService);
       httpMock = injector.get(HttpTestingController);
+      currentDate = moment();
 
-      elemDefault = new Item(0, 0, 'AAAAAAA');
+      elemDefault = new Image(0, 'image/png', 'AAAAAAA', currentDate);
     });
 
     describe('Service methods', () => {
       it('should find an element', () => {
-        const returnedFromService = Object.assign({}, elemDefault);
+        const returnedFromService = Object.assign(
+          {
+            uploadDate: currentDate.format(DATE_FORMAT),
+          },
+          elemDefault
+        );
 
         service.find(123).subscribe(resp => (expectedResult = resp.body));
 
@@ -34,33 +43,44 @@ describe('Service Tests', () => {
         expect(expectedResult).toMatchObject(elemDefault);
       });
 
-      it('should create a Item', () => {
+      it('should create a Image', () => {
         const returnedFromService = Object.assign(
           {
             id: 0,
+            uploadDate: currentDate.format(DATE_FORMAT),
           },
           elemDefault
         );
 
-        const expected = Object.assign({}, returnedFromService);
+        const expected = Object.assign(
+          {
+            uploadDate: currentDate,
+          },
+          returnedFromService
+        );
 
-        service.create(new Item()).subscribe(resp => (expectedResult = resp.body));
+        service.create(new Image()).subscribe(resp => (expectedResult = resp.body));
 
         const req = httpMock.expectOne({ method: 'POST' });
         req.flush(returnedFromService);
         expect(expectedResult).toMatchObject(expected);
       });
 
-      it('should update a Item', () => {
+      it('should update a Image', () => {
         const returnedFromService = Object.assign(
           {
-            qrCode: 1,
-            description: 'BBBBBB',
+            data: 'BBBBBB',
+            uploadDate: currentDate.format(DATE_FORMAT),
           },
           elemDefault
         );
 
-        const expected = Object.assign({}, returnedFromService);
+        const expected = Object.assign(
+          {
+            uploadDate: currentDate,
+          },
+          returnedFromService
+        );
 
         service.update(expected).subscribe(resp => (expectedResult = resp.body));
 
@@ -69,16 +89,21 @@ describe('Service Tests', () => {
         expect(expectedResult).toMatchObject(expected);
       });
 
-      it('should return a list of Item', () => {
+      it('should return a list of Image', () => {
         const returnedFromService = Object.assign(
           {
-            qrCode: 1,
-            description: 'BBBBBB',
+            data: 'BBBBBB',
+            uploadDate: currentDate.format(DATE_FORMAT),
           },
           elemDefault
         );
 
-        const expected = Object.assign({}, returnedFromService);
+        const expected = Object.assign(
+          {
+            uploadDate: currentDate,
+          },
+          returnedFromService
+        );
 
         service.query().subscribe(resp => (expectedResult = resp.body));
 
@@ -88,7 +113,7 @@ describe('Service Tests', () => {
         expect(expectedResult).toContainEqual(expected);
       });
 
-      it('should delete a Item', () => {
+      it('should delete a Image', () => {
         service.delete(123).subscribe(resp => (expectedResult = resp.ok));
 
         const req = httpMock.expectOne({ method: 'DELETE' });

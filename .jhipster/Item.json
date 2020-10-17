@@ -14,13 +14,17 @@
       "fieldValidateRules": [
         "required"
       ]
-    },
-    {
-      "fieldName": "picture",
-      "fieldType": "String"
     }
   ],
   "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "image",
+      "otherEntityRelationshipName": "item",
+      "relationshipName": "picture",
+      "otherEntityField": "id",
+      "ownerSide": true
+    },
     {
       "relationshipType": "one-to-many",
       "otherEntityName": "content",

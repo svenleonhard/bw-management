@@ -35,9 +35,6 @@ public class ItemResourceIT {
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
-    private static final String DEFAULT_PICTURE = "AAAAAAAAAA";
-    private static final String UPDATED_PICTURE = "BBBBBBBBBB";
-
     @Autowired
     private ItemRepository itemRepository;
 
@@ -58,8 +55,7 @@ public class ItemResourceIT {
     public static Item createEntity(EntityManager em) {
         Item item = new Item()
             .qrCode(DEFAULT_QR_CODE)
-            .description(DEFAULT_DESCRIPTION)
-            .picture(DEFAULT_PICTURE);
+            .description(DEFAULT_DESCRIPTION);
         return item;
     }
     /**
@@ -71,8 +67,7 @@ public class ItemResourceIT {
     public static Item createUpdatedEntity(EntityManager em) {
         Item item = new Item()
             .qrCode(UPDATED_QR_CODE)
-            .description(UPDATED_DESCRIPTION)
-            .picture(UPDATED_PICTURE);
+            .description(UPDATED_DESCRIPTION);
         return item;
     }
 
@@ -97,7 +92,6 @@ public class ItemResourceIT {
         Item testItem = itemList.get(itemList.size() - 1);
         assertThat(testItem.getQrCode()).isEqualTo(DEFAULT_QR_CODE);
         assertThat(testItem.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
-        assertThat(testItem.getPicture()).isEqualTo(DEFAULT_PICTURE);
     }
 
     @Test
@@ -170,8 +164,7 @@ public class ItemResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(item.getId().intValue())))
             .andExpect(jsonPath("$.[*].qrCode").value(hasItem(DEFAULT_QR_CODE)))
-            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
-            .andExpect(jsonPath("$.[*].picture").value(hasItem(DEFAULT_PICTURE)));
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)));
     }
     
     @Test
@@ -186,8 +179,7 @@ public class ItemResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(item.getId().intValue()))
             .andExpect(jsonPath("$.qrCode").value(DEFAULT_QR_CODE))
-            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
-            .andExpect(jsonPath("$.picture").value(DEFAULT_PICTURE));
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION));
     }
     @Test
     @Transactional
@@ -211,8 +203,7 @@ public class ItemResourceIT {
         em.detach(updatedItem);
         updatedItem
             .qrCode(UPDATED_QR_CODE)
-            .description(UPDATED_DESCRIPTION)
-            .picture(UPDATED_PICTURE);
+            .description(UPDATED_DESCRIPTION);
 
         restItemMockMvc.perform(put("/api/items")
             .contentType(MediaType.APPLICATION_JSON)
@@ -225,7 +216,6 @@ public class ItemResourceIT {
         Item testItem = itemList.get(itemList.size() - 1);
         assertThat(testItem.getQrCode()).isEqualTo(UPDATED_QR_CODE);
         assertThat(testItem.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
-        assertThat(testItem.getPicture()).isEqualTo(UPDATED_PICTURE);
     }
 
     @Test

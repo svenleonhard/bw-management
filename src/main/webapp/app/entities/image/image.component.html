@@ -1,11 +1,11 @@
 <div>
     <h2 id="page-heading">
-        <span jhiTranslate="bwManagementApp.item.home.title">Items</span>
+        <span jhiTranslate="bwManagementApp.image.home.title">Images</span>
 
-        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-item" [routerLink]="['/item/new']">
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-image" [routerLink]="['/image/new']">
             <fa-icon icon="plus"></fa-icon>
-            <span  jhiTranslate="bwManagementApp.item.home.createLabel">
-            Create a new Item
+            <span  jhiTranslate="bwManagementApp.image.home.createLabel">
+            Create a new Image
             </span>
         </button>
     </h2>
@@ -14,48 +14,45 @@
 
     <jhi-alert></jhi-alert>
 
-    <div class="alert alert-warning" id="no-result" *ngIf="items?.length === 0">
-        <span jhiTranslate="bwManagementApp.item.home.notFound">No items found</span>
+    <div class="alert alert-warning" id="no-result" *ngIf="images?.length === 0">
+        <span jhiTranslate="bwManagementApp.image.home.notFound">No images found</span>
     </div>
 
-    <div class="table-responsive" id="entities" *ngIf="items && items.length > 0">
+    <div class="table-responsive" id="entities" *ngIf="images && images.length > 0">
         <table class="table table-striped" aria-describedby="page-heading">
             <thead>
                 <tr>
                     <th scope="col" ><span jhiTranslate="global.field.id">ID</span></th>
-                    <th scope="col" ><span jhiTranslate="bwManagementApp.item.qrCode">Qr Code</span></th>
-                    <th scope="col" ><span jhiTranslate="bwManagementApp.item.description">Description</span></th>
-                    <th scope="col" ><span jhiTranslate="bwManagementApp.item.picture">Picture</span></th>
+                    <th scope="col" ><span jhiTranslate="bwManagementApp.image.data">Data</span></th>
+                    <th scope="col" ><span jhiTranslate="bwManagementApp.image.uploadDate">Upload Date</span></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let item of items ;trackBy: trackId">
-                    <td><a [routerLink]="['/item', item.id, 'view']">{{ item.id }}</a></td>
-                    <td>{{ item.qrCode }}</td>
-                    <td>{{ item.description }}</td>
+                <tr *ngFor="let image of images ;trackBy: trackId">
+                    <td><a [routerLink]="['/image', image.id, 'view']">{{ image.id }}</a></td>
                     <td>
-                        <div *ngIf="item.picture">
-                            <a [routerLink]="['/image', item.picture?.id, 'view']" >{{ item.picture?.id }}</a>
-                        </div>
+                        <a *ngIf="image.data" (click)="openFile(image.dataContentType, image.data)" jhiTranslate="entity.action.open">open</a>
+                        <span *ngIf="image.data">{{ image.dataContentType }}, {{ byteSize(image.data) }}</span>
                     </td>
+                    <td>{{ image.uploadDate | date:'mediumDate' }}</td>
                     <td class="text-right">
                         <div class="btn-group">
                             <button type="submit"
-                                    [routerLink]="['/item', item.id, 'view']"
+                                    [routerLink]="['/image', image.id, 'view']"
                                     class="btn btn-info btn-sm">
                                 <fa-icon icon="eye"></fa-icon>
                                 <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
                             </button>
 
                             <button type="submit"
-                                    [routerLink]="['/item', item.id, 'edit']"
+                                    [routerLink]="['/image', image.id, 'edit']"
                                     class="btn btn-primary btn-sm">
                                 <fa-icon icon="pencil-alt"></fa-icon>
                                 <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
                             </button>
 
-                            <button type="submit" (click)="delete(item)"
+                            <button type="submit" (click)="delete(image)"
                                     class="btn btn-danger btn-sm">
                                 <fa-icon icon="times"></fa-icon>
                                 <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>

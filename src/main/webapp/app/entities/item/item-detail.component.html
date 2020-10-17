@@ -18,7 +18,9 @@
                 </dd>
                 <dt><span jhiTranslate="bwManagementApp.item.picture">Picture</span></dt>
                 <dd>
-                    <span>{{ item.picture }}</span>
+                    <div *ngIf="item.picture">
+                        <a [routerLink]="['/image', item.picture?.id, 'view']">{{ item.picture?.id }}</a>
+                    </div>
                 </dd>
             </dl>
 

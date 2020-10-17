@@ -1,11 +1,7 @@
 entity Item {
   qrCode Integer required,
   description String required,
-}
-
-entity Image {
-  data Blob required,
-  uploadDate LocalDate
+  picture String
 }
 
 entity Content {
@@ -25,9 +21,8 @@ entity Letting {
 }
 
 relationship OneToOne {
-  Assignment{boxItem} to Item,
-  Assignment{box} to Item,
-  Item{picture} to Image
+  Assignment{boxItem} to Item
+  Assignment{box} to Item
 }
 
 relationship OneToMany {
