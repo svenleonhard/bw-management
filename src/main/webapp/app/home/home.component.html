@@ -43,6 +43,19 @@
 
                     </dl>
                 </ng-container>
+
+                <h3>Sub Items</h3>
+
+                <ng-container *ngFor="let subItem of subItems">
+                    <dt><span jhiTranslate="bwManagementApp.item.qrCode">Qr Code</span></dt>
+                    <dd>
+                        <span *ngIf="subItem != undefined">{{ subItem.id }}</span>
+                    </dd>
+                    <dt><span jhiTranslate="bwManagementApp.item.description">Description</span></dt>
+                    <dd>
+                        <span *ngIf="subItem != undefined">{{ subItem.description }}</span>
+                    </dd>
+                </ng-container>
         </div>
 
     </div>

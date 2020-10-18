@@ -8,6 +8,9 @@ import { IItem } from 'app/shared/model/item.model';
 import { ItemService } from 'app/entities/item/item.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { logger } from 'codelyzer/util/logger';
+import { AssignmentService } from 'app/entities/assignment/assignment.service';
+import { equals } from '@ngx-translate/core/lib/util';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'jhi-home',
@@ -18,13 +21,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   account: Account | null = null;
   authSubscription?: Subscription;
   item: IItem | null = null;
+  subItems: (IItem | undefined)[] | null = null;
   picture: any | null = null;
 
   constructor(
     private accountService: AccountService,
     private loginModalService: LoginModalService,
     private itemService: ItemService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private assignmentService: AssignmentService
   ) {}
 
   ngOnInit(): void {
@@ -40,6 +45,23 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   itemCodeSelected(itemCode: number): void {
+    this.assignmentService.query({ 'boxId.equals': itemCode }).subscribe(res => {
+      console.log('read assignments');
+      console.log(res.body);
+
+      if (res.body != null) {
+        this.subItems = res.body.map(assignment => assignment.boxItem).filter(boxItem => boxItem != undefined);
+
+        this.subItems = this.subItems.map(subItem => {
+          if (subItem && subItem.picture) {
+            subItem.picture.data = this.sanitizer.bypassSecurityTrustUrl('data:image/jpeg;base64,' + subItem.picture.data);
+          }
+          return subItem;
+        });
+        console.log(this.subItems);
+      }
+    });
+
     this.itemService.find(itemCode).subscribe(res => {
       this.item = res.body || null;
       if (this.item && this.item.picture) {
