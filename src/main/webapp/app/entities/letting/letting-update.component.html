@@ -53,7 +53,7 @@
                     <label class="form-control-label" jhiTranslate="bwManagementApp.letting.item" for="field_item">Item</label>
                     <select class="form-control" id="field_item" name="item" formControlName="item">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="itemOption.id === editForm.get('item')!.value?.id ? editForm.get('item')!.value : itemOption" *ngFor="let itemOption of items; trackBy: trackById">{{ itemOption.description }}</option>
+                        <option [ngValue]="itemOption.id === editForm.get('item')!.value?.id ? editForm.get('item')!.value : itemOption" *ngFor="let itemOption of items; trackBy: trackById">{{ itemOption.id }}</option>
                     </select>
                 </div>
             </div>

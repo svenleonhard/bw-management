@@ -3,6 +3,9 @@ package de.bildwerk.bwmanagement.web.rest;
 import de.bildwerk.bwmanagement.BwManagementApp;
 import de.bildwerk.bwmanagement.domain.Image;
 import de.bildwerk.bwmanagement.repository.ImageRepository;
+import de.bildwerk.bwmanagement.service.ImageService;
+import de.bildwerk.bwmanagement.service.dto.ImageCriteria;
+import de.bildwerk.bwmanagement.service.ImageQueryService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,9 +42,16 @@ public class ImageResourceIT {
 
     private static final LocalDate DEFAULT_UPLOAD_DATE = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_UPLOAD_DATE = LocalDate.now(ZoneId.systemDefault());
+    private static final LocalDate SMALLER_UPLOAD_DATE = LocalDate.ofEpochDay(-1L);
 
     @Autowired
     private ImageRepository imageRepository;
+
+    @Autowired
+    private ImageService imageService;
+
+    @Autowired
+    private ImageQueryService imageQueryService;
 
     @Autowired
     private EntityManager em;
@@ -153,6 +163,167 @@ public class ImageResourceIT {
             .andExpect(jsonPath("$.data").value(Base64Utils.encodeToString(DEFAULT_DATA)))
             .andExpect(jsonPath("$.uploadDate").value(DEFAULT_UPLOAD_DATE.toString()));
     }
+
+
+    @Test
+    @Transactional
+    public void getImagesByIdFiltering() throws Exception {
+        // Initialize the database
+        imageRepository.saveAndFlush(image);
+
+        Long id = image.getId();
+
+        defaultImageShouldBeFound("id.equals=" + id);
+        defaultImageShouldNotBeFound("id.notEquals=" + id);
+
+        defaultImageShouldBeFound("id.greaterThanOrEqual=" + id);
+        defaultImageShouldNotBeFound("id.greaterThan=" + id);
+
+        defaultImageShouldBeFound("id.lessThanOrEqual=" + id);
+        defaultImageShouldNotBeFound("id.lessThan=" + id);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllImagesByUploadDateIsEqualToSomething() throws Exception {
+        // Initialize the database
+        imageRepository.saveAndFlush(image);
+
+        // Get all the imageList where uploadDate equals to DEFAULT_UPLOAD_DATE
+        defaultImageShouldBeFound("uploadDate.equals=" + DEFAULT_UPLOAD_DATE);
+
+        // Get all the imageList where uploadDate equals to UPDATED_UPLOAD_DATE
+        defaultImageShouldNotBeFound("uploadDate.equals=" + UPDATED_UPLOAD_DATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllImagesByUploadDateIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        imageRepository.saveAndFlush(image);
+
+        // Get all the imageList where uploadDate not equals to DEFAULT_UPLOAD_DATE
+        defaultImageShouldNotBeFound("uploadDate.notEquals=" + DEFAULT_UPLOAD_DATE);
+
+        // Get all the imageList where uploadDate not equals to UPDATED_UPLOAD_DATE
+        defaultImageShouldBeFound("uploadDate.notEquals=" + UPDATED_UPLOAD_DATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllImagesByUploadDateIsInShouldWork() throws Exception {
+        // Initialize the database
+        imageRepository.saveAndFlush(image);
+
+        // Get all the imageList where uploadDate in DEFAULT_UPLOAD_DATE or UPDATED_UPLOAD_DATE
+        defaultImageShouldBeFound("uploadDate.in=" + DEFAULT_UPLOAD_DATE + "," + UPDATED_UPLOAD_DATE);
+
+        // Get all the imageList where uploadDate equals to UPDATED_UPLOAD_DATE
+        defaultImageShouldNotBeFound("uploadDate.in=" + UPDATED_UPLOAD_DATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllImagesByUploadDateIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        imageRepository.saveAndFlush(image);
+
+        // Get all the imageList where uploadDate is not null
+        defaultImageShouldBeFound("uploadDate.specified=true");
+
+        // Get all the imageList where uploadDate is null
+        defaultImageShouldNotBeFound("uploadDate.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllImagesByUploadDateIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        imageRepository.saveAndFlush(image);
+
+        // Get all the imageList where uploadDate is greater than or equal to DEFAULT_UPLOAD_DATE
+        defaultImageShouldBeFound("uploadDate.greaterThanOrEqual=" + DEFAULT_UPLOAD_DATE);
+
+        // Get all the imageList where uploadDate is greater than or equal to UPDATED_UPLOAD_DATE
+        defaultImageShouldNotBeFound("uploadDate.greaterThanOrEqual=" + UPDATED_UPLOAD_DATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllImagesByUploadDateIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        imageRepository.saveAndFlush(image);
+
+        // Get all the imageList where uploadDate is less than or equal to DEFAULT_UPLOAD_DATE
+        defaultImageShouldBeFound("uploadDate.lessThanOrEqual=" + DEFAULT_UPLOAD_DATE);
+
+        // Get all the imageList where uploadDate is less than or equal to SMALLER_UPLOAD_DATE
+        defaultImageShouldNotBeFound("uploadDate.lessThanOrEqual=" + SMALLER_UPLOAD_DATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllImagesByUploadDateIsLessThanSomething() throws Exception {
+        // Initialize the database
+        imageRepository.saveAndFlush(image);
+
+        // Get all the imageList where uploadDate is less than DEFAULT_UPLOAD_DATE
+        defaultImageShouldNotBeFound("uploadDate.lessThan=" + DEFAULT_UPLOAD_DATE);
+
+        // Get all the imageList where uploadDate is less than UPDATED_UPLOAD_DATE
+        defaultImageShouldBeFound("uploadDate.lessThan=" + UPDATED_UPLOAD_DATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllImagesByUploadDateIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        imageRepository.saveAndFlush(image);
+
+        // Get all the imageList where uploadDate is greater than DEFAULT_UPLOAD_DATE
+        defaultImageShouldNotBeFound("uploadDate.greaterThan=" + DEFAULT_UPLOAD_DATE);
+
+        // Get all the imageList where uploadDate is greater than SMALLER_UPLOAD_DATE
+        defaultImageShouldBeFound("uploadDate.greaterThan=" + SMALLER_UPLOAD_DATE);
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is returned.
+     */
+    private void defaultImageShouldBeFound(String filter) throws Exception {
+        restImageMockMvc.perform(get("/api/images?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(image.getId().intValue())))
+            .andExpect(jsonPath("$.[*].dataContentType").value(hasItem(DEFAULT_DATA_CONTENT_TYPE)))
+            .andExpect(jsonPath("$.[*].data").value(hasItem(Base64Utils.encodeToString(DEFAULT_DATA))))
+            .andExpect(jsonPath("$.[*].uploadDate").value(hasItem(DEFAULT_UPLOAD_DATE.toString())));
+
+        // Check, that the count call also returns 1
+        restImageMockMvc.perform(get("/api/images/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("1"));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is not returned.
+     */
+    private void defaultImageShouldNotBeFound(String filter) throws Exception {
+        restImageMockMvc.perform(get("/api/images?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$").isEmpty());
+
+        // Check, that the count call also returns 0
+        restImageMockMvc.perform(get("/api/images/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("0"));
+    }
+
     @Test
     @Transactional
     public void getNonExistingImage() throws Exception {
@@ -165,7 +336,7 @@ public class ImageResourceIT {
     @Transactional
     public void updateImage() throws Exception {
         // Initialize the database
-        imageRepository.saveAndFlush(image);
+        imageService.save(image);
 
         int databaseSizeBeforeUpdate = imageRepository.findAll().size();
 
@@ -212,7 +383,7 @@ public class ImageResourceIT {
     @Transactional
     public void deleteImage() throws Exception {
         // Initialize the database
-        imageRepository.saveAndFlush(image);
+        imageService.save(image);
 
         int databaseSizeBeforeDelete = imageRepository.findAll().size();
 

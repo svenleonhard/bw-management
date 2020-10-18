@@ -1,8 +1,10 @@
 package de.bildwerk.bwmanagement.web.rest;
 
 import de.bildwerk.bwmanagement.domain.Image;
-import de.bildwerk.bwmanagement.repository.ImageRepository;
+import de.bildwerk.bwmanagement.service.ImageService;
 import de.bildwerk.bwmanagement.web.rest.errors.BadRequestAlertException;
+import de.bildwerk.bwmanagement.service.dto.ImageCriteria;
+import de.bildwerk.bwmanagement.service.ImageQueryService;
 
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -10,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -24,7 +25,6 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api")
-@Transactional
 public class ImageResource {
 
     private final Logger log = LoggerFactory.getLogger(ImageResource.class);
@@ -34,10 +34,13 @@ public class ImageResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final ImageRepository imageRepository;
+    private final ImageService imageService;
 
-    public ImageResource(ImageRepository imageRepository) {
-        this.imageRepository = imageRepository;
+    private final ImageQueryService imageQueryService;
+
+    public ImageResource(ImageService imageService, ImageQueryService imageQueryService) {
+        this.imageService = imageService;
+        this.imageQueryService = imageQueryService;
     }
 
     /**
@@ -53,7 +56,7 @@ public class ImageResource {
         if (image.getId() != null) {
             throw new BadRequestAlertException("A new image cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Image result = imageRepository.save(image);
+        Image result = imageService.save(image);
         return ResponseEntity.created(new URI("/api/images/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -74,7 +77,7 @@ public class ImageResource {
         if (image.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Image result = imageRepository.save(image);
+        Image result = imageService.save(image);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, image.getId().toString()))
             .body(result);
@@ -83,12 +86,26 @@ public class ImageResource {
     /**
      * {@code GET  /images} : get all the images.
      *
+     * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of images in body.
      */
     @GetMapping("/images")
-    public List<Image> getAllImages() {
-        log.debug("REST request to get all Images");
-        return imageRepository.findAll();
+    public ResponseEntity<List<Image>> getAllImages(ImageCriteria criteria) {
+        log.debug("REST request to get Images by criteria: {}", criteria);
+        List<Image> entityList = imageQueryService.findByCriteria(criteria);
+        return ResponseEntity.ok().body(entityList);
+    }
+
+    /**
+     * {@code GET  /images/count} : count all the images.
+     *
+     * @param criteria the criteria which the requested entities should match.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+     */
+    @GetMapping("/images/count")
+    public ResponseEntity<Long> countImages(ImageCriteria criteria) {
+        log.debug("REST request to count Images by criteria: {}", criteria);
+        return ResponseEntity.ok().body(imageQueryService.countByCriteria(criteria));
     }
 
     /**
@@ -100,7 +117,7 @@ public class ImageResource {
     @GetMapping("/images/{id}")
     public ResponseEntity<Image> getImage(@PathVariable Long id) {
         log.debug("REST request to get Image : {}", id);
-        Optional<Image> image = imageRepository.findById(id);
+        Optional<Image> image = imageService.findOne(id);
         return ResponseUtil.wrapOrNotFound(image);
     }
 
@@ -113,7 +130,7 @@ public class ImageResource {
     @DeleteMapping("/images/{id}")
     public ResponseEntity<Void> deleteImage(@PathVariable Long id) {
         log.debug("REST request to delete Image : {}", id);
-        imageRepository.deleteById(id);
+        imageService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
     }
 }

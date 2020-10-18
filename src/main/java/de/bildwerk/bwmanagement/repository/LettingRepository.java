@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface LettingRepository extends JpaRepository<Letting, Long> {
+public interface LettingRepository extends JpaRepository<Letting, Long>, JpaSpecificationExecutor<Letting> {
 }

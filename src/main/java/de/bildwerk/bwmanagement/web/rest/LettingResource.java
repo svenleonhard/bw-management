@@ -1,8 +1,10 @@
 package de.bildwerk.bwmanagement.web.rest;
 
 import de.bildwerk.bwmanagement.domain.Letting;
-import de.bildwerk.bwmanagement.repository.LettingRepository;
+import de.bildwerk.bwmanagement.service.LettingService;
 import de.bildwerk.bwmanagement.web.rest.errors.BadRequestAlertException;
+import de.bildwerk.bwmanagement.service.dto.LettingCriteria;
+import de.bildwerk.bwmanagement.service.LettingQueryService;
 
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -10,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -24,7 +25,6 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api")
-@Transactional
 public class LettingResource {
 
     private final Logger log = LoggerFactory.getLogger(LettingResource.class);
@@ -34,10 +34,13 @@ public class LettingResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final LettingRepository lettingRepository;
+    private final LettingService lettingService;
 
-    public LettingResource(LettingRepository lettingRepository) {
-        this.lettingRepository = lettingRepository;
+    private final LettingQueryService lettingQueryService;
+
+    public LettingResource(LettingService lettingService, LettingQueryService lettingQueryService) {
+        this.lettingService = lettingService;
+        this.lettingQueryService = lettingQueryService;
     }
 
     /**
@@ -53,7 +56,7 @@ public class LettingResource {
         if (letting.getId() != null) {
             throw new BadRequestAlertException("A new letting cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Letting result = lettingRepository.save(letting);
+        Letting result = lettingService.save(letting);
         return ResponseEntity.created(new URI("/api/lettings/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -74,7 +77,7 @@ public class LettingResource {
         if (letting.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Letting result = lettingRepository.save(letting);
+        Letting result = lettingService.save(letting);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, letting.getId().toString()))
             .body(result);
@@ -83,12 +86,26 @@ public class LettingResource {
     /**
      * {@code GET  /lettings} : get all the lettings.
      *
+     * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of lettings in body.
      */
     @GetMapping("/lettings")
-    public List<Letting> getAllLettings() {
-        log.debug("REST request to get all Lettings");
-        return lettingRepository.findAll();
+    public ResponseEntity<List<Letting>> getAllLettings(LettingCriteria criteria) {
+        log.debug("REST request to get Lettings by criteria: {}", criteria);
+        List<Letting> entityList = lettingQueryService.findByCriteria(criteria);
+        return ResponseEntity.ok().body(entityList);
+    }
+
+    /**
+     * {@code GET  /lettings/count} : count all the lettings.
+     *
+     * @param criteria the criteria which the requested entities should match.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+     */
+    @GetMapping("/lettings/count")
+    public ResponseEntity<Long> countLettings(LettingCriteria criteria) {
+        log.debug("REST request to count Lettings by criteria: {}", criteria);
+        return ResponseEntity.ok().body(lettingQueryService.countByCriteria(criteria));
     }
 
     /**
@@ -100,7 +117,7 @@ public class LettingResource {
     @GetMapping("/lettings/{id}")
     public ResponseEntity<Letting> getLetting(@PathVariable Long id) {
         log.debug("REST request to get Letting : {}", id);
-        Optional<Letting> letting = lettingRepository.findById(id);
+        Optional<Letting> letting = lettingService.findOne(id);
         return ResponseUtil.wrapOrNotFound(letting);
     }
 
@@ -113,7 +130,7 @@ public class LettingResource {
     @DeleteMapping("/lettings/{id}")
     public ResponseEntity<Void> deleteLetting(@PathVariable Long id) {
         log.debug("REST request to delete Letting : {}", id);
-        lettingRepository.deleteById(id);
+        lettingService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
     }
 }

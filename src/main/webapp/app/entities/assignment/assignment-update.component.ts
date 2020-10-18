@@ -40,7 +40,7 @@ export class AssignmentUpdateComponent implements OnInit {
       this.updateForm(assignment);
 
       this.itemService
-        .query({ filter: 'assignment-is-null' })
+        .query({ 'assignmentId.specified': 'false' })
         .pipe(
           map((res: HttpResponse<IItem[]>) => {
             return res.body || [];
@@ -62,7 +62,7 @@ export class AssignmentUpdateComponent implements OnInit {
         });
 
       this.itemService
-        .query({ filter: 'assignment-is-null' })
+        .query({ 'assignmentId.specified': 'false' })
         .pipe(
           map((res: HttpResponse<IItem[]>) => {
             return res.body || [];

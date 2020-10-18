@@ -34,3 +34,6 @@ relationship OneToMany {
   Item to Content{item},
   Item to Letting{item}
 }
+
+service all with serviceImpl
+filter all

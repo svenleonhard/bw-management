@@ -1,8 +1,10 @@
 package de.bildwerk.bwmanagement.web.rest;
 
 import de.bildwerk.bwmanagement.domain.Item;
-import de.bildwerk.bwmanagement.repository.ItemRepository;
+import de.bildwerk.bwmanagement.service.ItemService;
 import de.bildwerk.bwmanagement.web.rest.errors.BadRequestAlertException;
+import de.bildwerk.bwmanagement.service.dto.ItemCriteria;
+import de.bildwerk.bwmanagement.service.ItemQueryService;
 
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -10,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -24,7 +25,6 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api")
-@Transactional
 public class ItemResource {
 
     private final Logger log = LoggerFactory.getLogger(ItemResource.class);
@@ -34,10 +34,13 @@ public class ItemResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final ItemRepository itemRepository;
+    private final ItemService itemService;
 
-    public ItemResource(ItemRepository itemRepository) {
-        this.itemRepository = itemRepository;
+    private final ItemQueryService itemQueryService;
+
+    public ItemResource(ItemService itemService, ItemQueryService itemQueryService) {
+        this.itemService = itemService;
+        this.itemQueryService = itemQueryService;
     }
 
     /**
@@ -53,7 +56,7 @@ public class ItemResource {
         if (item.getId() != null) {
             throw new BadRequestAlertException("A new item cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Item result = itemRepository.save(item);
+        Item result = itemService.save(item);
         return ResponseEntity.created(new URI("/api/items/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -74,7 +77,7 @@ public class ItemResource {
         if (item.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Item result = itemRepository.save(item);
+        Item result = itemService.save(item);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, item.getId().toString()))
             .body(result);
@@ -83,12 +86,26 @@ public class ItemResource {
     /**
      * {@code GET  /items} : get all the items.
      *
+     * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of items in body.
      */
     @GetMapping("/items")
-    public List<Item> getAllItems() {
-        log.debug("REST request to get all Items");
-        return itemRepository.findAll();
+    public ResponseEntity<List<Item>> getAllItems(ItemCriteria criteria) {
+        log.debug("REST request to get Items by criteria: {}", criteria);
+        List<Item> entityList = itemQueryService.findByCriteria(criteria);
+        return ResponseEntity.ok().body(entityList);
+    }
+
+    /**
+     * {@code GET  /items/count} : count all the items.
+     *
+     * @param criteria the criteria which the requested entities should match.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+     */
+    @GetMapping("/items/count")
+    public ResponseEntity<Long> countItems(ItemCriteria criteria) {
+        log.debug("REST request to count Items by criteria: {}", criteria);
+        return ResponseEntity.ok().body(itemQueryService.countByCriteria(criteria));
     }
 
     /**
@@ -100,7 +117,7 @@ public class ItemResource {
     @GetMapping("/items/{id}")
     public ResponseEntity<Item> getItem(@PathVariable Long id) {
         log.debug("REST request to get Item : {}", id);
-        Optional<Item> item = itemRepository.findById(id);
+        Optional<Item> item = itemService.findOne(id);
         return ResponseUtil.wrapOrNotFound(item);
     }
 
@@ -113,7 +130,7 @@ public class ItemResource {
     @DeleteMapping("/items/{id}")
     public ResponseEntity<Void> deleteItem(@PathVariable Long id) {
         log.debug("REST request to delete Item : {}", id);
-        itemRepository.deleteById(id);
+        itemService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
     }
 }

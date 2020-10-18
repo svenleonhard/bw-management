@@ -38,7 +38,7 @@ export class ItemUpdateComponent implements OnInit {
       this.updateForm(item);
 
       this.imageService
-        .query({ filter: 'item-is-null' })
+        .query({ 'itemId.specified': 'false' })
         .pipe(
           map((res: HttpResponse<IImage[]>) => {
             return res.body || [];
