@@ -11,6 +11,7 @@
         "content": "Content",
         "assignment": "Assignment",
         "letting": "Letting",
+        "image": "Image",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {
@@ -102,7 +103,8 @@
       "edit": "Bearbeiten",
       "open": "Öffnen",
       "save": "Speichern",
-      "view": "Details"
+      "view": "Details",
+      "find": "Finden"
     },
     "detail": {
       "field": "Feld",

@@ -1,0 +1,25 @@
+{
+  "bwManagementApp": {
+    "assignment": {
+      "home": {
+        "title": "Assignments",
+        "createLabel": "Assignment erstellen",
+        "createOrEditLabel": "Assignment erstellen oder bearbeiten",
+        "notFound": "No Assignments found"
+      },
+      "created": "Assignment erstellt mit ID {{ param }}",
+      "updated": "Assignment aktualisiert mit ID {{ param }}",
+      "deleted": "Assignment gelöscht mit ID {{ param }}",
+      "delete": {
+        "question": "Soll Assignment {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Assignment"
+      },
+      "description": "Description",
+      "comment": "Comment",
+      "boxItem": "Box Item",
+      "box": "Box"
+    }
+  }
+}

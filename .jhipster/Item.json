@@ -1,0 +1,52 @@
+{
+  "name": "Item",
+  "fields": [
+    {
+      "fieldName": "qrCode",
+      "fieldType": "Integer",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "image",
+      "otherEntityRelationshipName": "item",
+      "relationshipName": "picture",
+      "otherEntityField": "id",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "content",
+      "otherEntityRelationshipName": "item",
+      "relationshipName": "content"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "letting",
+      "otherEntityRelationshipName": "item",
+      "relationshipName": "letting"
+    }
+  ],
+  "changelogDate": "20201016171647",
+  "entityTableName": "item",
+  "dto": "no",
+  "pagination": "no",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

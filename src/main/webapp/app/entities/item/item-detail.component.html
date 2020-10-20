@@ -1,0 +1,40 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="item">
+            <h2><span jhiTranslate="bwManagementApp.item.detail.title">Item</span> {{ item.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="bwManagementApp.item.qrCode">Qr Code</span></dt>
+                <dd>
+                    <span>{{ item.qrCode }}</span>
+                </dd>
+                <dt><span jhiTranslate="bwManagementApp.item.description">Description</span></dt>
+                <dd>
+                    <span>{{ item.description }}</span>
+                </dd>
+                <dt><span jhiTranslate="bwManagementApp.item.picture">Picture</span></dt>
+                <dd>
+                    <div *ngIf="item.picture">
+                        <a [routerLink]="['/image', item.picture?.id, 'view']">{{ item.picture?.id }}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/item', item.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

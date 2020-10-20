@@ -1,0 +1,39 @@
+entity Item {
+  qrCode Integer required,
+  description String required,
+}
+
+entity Image {
+  data Blob required,
+  uploadDate LocalDate
+}
+
+entity Content {
+  description String required
+}
+
+entity Assignment {
+  description String,
+  comment String
+}
+
+entity Letting {
+  startDate LocalDate required,
+  endDate LocalDate,
+  name String,
+  location String
+}
+
+relationship OneToOne {
+  Assignment{boxItem} to Item,
+  Assignment{box} to Item,
+  Item{picture} to Image
+}
+
+relationship OneToMany {
+  Item to Content{item},
+  Item to Letting{item}
+}
+
+service all with serviceImpl
+filter all

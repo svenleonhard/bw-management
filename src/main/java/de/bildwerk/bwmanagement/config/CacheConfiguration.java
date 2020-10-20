@@ -57,6 +57,7 @@ public class CacheConfiguration {
             createCache(cm, de.bildwerk.bwmanagement.domain.Content.class.getName());
             createCache(cm, de.bildwerk.bwmanagement.domain.Assignment.class.getName());
             createCache(cm, de.bildwerk.bwmanagement.domain.Letting.class.getName());
+            createCache(cm, de.bildwerk.bwmanagement.domain.Image.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }

@@ -1,0 +1,48 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="letting">
+            <h2><span jhiTranslate="bwManagementApp.letting.detail.title">Letting</span> {{ letting.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="bwManagementApp.letting.startDate">Start Date</span></dt>
+                <dd>
+                    <span>{{ letting.startDate }}</span>
+                </dd>
+                <dt><span jhiTranslate="bwManagementApp.letting.endDate">End Date</span></dt>
+                <dd>
+                    <span>{{ letting.endDate }}</span>
+                </dd>
+                <dt><span jhiTranslate="bwManagementApp.letting.name">Name</span></dt>
+                <dd>
+                    <span>{{ letting.name }}</span>
+                </dd>
+                <dt><span jhiTranslate="bwManagementApp.letting.location">Location</span></dt>
+                <dd>
+                    <span>{{ letting.location }}</span>
+                </dd>
+                <dt><span jhiTranslate="bwManagementApp.letting.item">Item</span></dt>
+                <dd>
+                    <div *ngIf="letting.item">
+                        <a [routerLink]="['/item', letting.item?.id, 'view']">{{ letting.item?.id }}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/letting', letting.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

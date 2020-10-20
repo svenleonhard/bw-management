@@ -1,0 +1,66 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="bwManagementApp.image.home.title">Images</span>
+
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-image" [routerLink]="['/image/new']">
+            <fa-icon icon="plus"></fa-icon>
+            <span  jhiTranslate="bwManagementApp.image.home.createLabel">
+            Create a new Image
+            </span>
+        </button>
+    </h2>
+
+    <jhi-alert-error></jhi-alert-error>
+
+    <jhi-alert></jhi-alert>
+
+    <div class="alert alert-warning" id="no-result" *ngIf="images?.length === 0">
+        <span jhiTranslate="bwManagementApp.image.home.notFound">No images found</span>
+    </div>
+
+    <div class="table-responsive" id="entities" *ngIf="images && images.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
+            <thead>
+                <tr>
+                    <th scope="col" ><span jhiTranslate="global.field.id">ID</span></th>
+                    <th scope="col" ><span jhiTranslate="bwManagementApp.image.data">Data</span></th>
+                    <th scope="col" ><span jhiTranslate="bwManagementApp.image.uploadDate">Upload Date</span></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let image of images ;trackBy: trackId">
+                    <td><a [routerLink]="['/image', image.id, 'view']">{{ image.id }}</a></td>
+                    <td>
+                        <a *ngIf="image.data" (click)="openFile(image.dataContentType, image.data)" jhiTranslate="entity.action.open">open</a>
+                        <span *ngIf="image.data">{{ image.dataContentType }}, {{ byteSize(image.data) }}</span>
+                    </td>
+                    <td>{{ image.uploadDate | date:'mediumDate' }}</td>
+                    <td class="text-right">
+                        <div class="btn-group">
+                            <button type="submit"
+                                    [routerLink]="['/image', image.id, 'view']"
+                                    class="btn btn-info btn-sm">
+                                <fa-icon icon="eye"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                            </button>
+
+                            <button type="submit"
+                                    [routerLink]="['/image', image.id, 'edit']"
+                                    class="btn btn-primary btn-sm">
+                                <fa-icon icon="pencil-alt"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                            </button>
+
+                            <button type="submit" (click)="delete(image)"
+                                    class="btn btn-danger btn-sm">
+                                <fa-icon icon="times"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

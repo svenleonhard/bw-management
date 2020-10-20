@@ -1,0 +1,26 @@
+{
+  "bwManagementApp": {
+    "letting": {
+      "home": {
+        "title": "Lettings",
+        "createLabel": "Letting erstellen",
+        "createOrEditLabel": "Letting erstellen oder bearbeiten",
+        "notFound": "No Lettings found"
+      },
+      "created": "Letting erstellt mit ID {{ param }}",
+      "updated": "Letting aktualisiert mit ID {{ param }}",
+      "deleted": "Letting gelöscht mit ID {{ param }}",
+      "delete": {
+        "question": "Soll Letting {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Letting"
+      },
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "name": "Name",
+      "location": "Location",
+      "item": "Item"
+    }
+  }
+}
