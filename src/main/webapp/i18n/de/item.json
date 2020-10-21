@@ -20,7 +20,8 @@
       "description": "Description",
       "picture": "Picture",
       "content": "Content",
-      "letting": "Letting"
+      "letting": "Letting",
+      "parent": "Parent"
     }
   }
 }

@@ -46,6 +46,14 @@
                         <option [ngValue]="imageOption.id === editForm.get('picture')!.value?.id ? editForm.get('picture')!.value : imageOption" *ngFor="let imageOption of pictures; trackBy: trackById">{{ imageOption.id }}</option>
                     </select>
                 </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="bwManagementApp.item.parent" for="field_parent">Parent</label>
+                    <select class="form-control" id="field_parent" name="parent" formControlName="parent">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="itemOption.id === editForm.get('parent')!.value?.id ? editForm.get('parent')!.value : itemOption" *ngFor="let itemOption of items; trackBy: trackById">{{ itemOption.id }}</option>
+                    </select>
+                </div>
             </div>
 
             <div>

@@ -11,6 +11,8 @@ import { ItemService } from './item.service';
 import { IImage } from 'app/shared/model/image.model';
 import { ImageService } from 'app/entities/image/image.service';
 
+type SelectableEntity = IImage | IItem;
+
 @Component({
   selector: 'jhi-item-update',
   templateUrl: './item-update.component.html',
@@ -18,12 +20,14 @@ import { ImageService } from 'app/entities/image/image.service';
 export class ItemUpdateComponent implements OnInit {
   isSaving = false;
   pictures: IImage[] = [];
+  items: IItem[] = [];
 
   editForm = this.fb.group({
     id: [],
     qrCode: [null, [Validators.required]],
     description: [null, [Validators.required]],
     picture: [],
+    parent: [],
   });
 
   constructor(
@@ -58,6 +62,8 @@ export class ItemUpdateComponent implements OnInit {
               .subscribe((concatRes: IImage[]) => (this.pictures = concatRes));
           }
         });
+
+      this.itemService.query().subscribe((res: HttpResponse<IItem[]>) => (this.items = res.body || []));
     });
   }
 
@@ -67,6 +73,7 @@ export class ItemUpdateComponent implements OnInit {
       qrCode: item.qrCode,
       description: item.description,
       picture: item.picture,
+      parent: item.parent,
     });
   }
 
@@ -91,6 +98,7 @@ export class ItemUpdateComponent implements OnInit {
       qrCode: this.editForm.get(['qrCode'])!.value,
       description: this.editForm.get(['description'])!.value,
       picture: this.editForm.get(['picture'])!.value,
+      parent: this.editForm.get(['parent'])!.value,
     };
   }
 
@@ -110,7 +118,7 @@ export class ItemUpdateComponent implements OnInit {
     this.isSaving = false;
   }
 
-  trackById(index: number, item: IImage): any {
+  trackById(index: number, item: SelectableEntity): any {
     return item.id;
   }
 }

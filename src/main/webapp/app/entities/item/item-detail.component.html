@@ -22,6 +22,12 @@
                         <a [routerLink]="['/image', item.picture?.id, 'view']">{{ item.picture?.id }}</a>
                     </div>
                 </dd>
+                <dt><span jhiTranslate="bwManagementApp.item.parent">Parent</span></dt>
+                <dd>
+                    <div *ngIf="item.parent">
+                        <a [routerLink]="['/item', item.parent?.id, 'view']">{{ item.parent?.id }}</a>
+                    </div>
+                </dd>
             </dl>
 
             <button type="submit"

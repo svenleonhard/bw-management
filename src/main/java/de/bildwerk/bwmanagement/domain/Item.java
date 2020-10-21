@@ -1,5 +1,6 @@
 package de.bildwerk.bwmanagement.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -43,6 +44,10 @@ public class Item implements Serializable {
     @OneToMany(mappedBy = "item")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Letting> lettings = new HashSet<>();
+
+    @ManyToOne
+    @JsonIgnoreProperties(value = "items", allowSetters = true)
+    private Item parent;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -140,6 +145,19 @@ public class Item implements Serializable {
 
     public void setLettings(Set<Letting> lettings) {
         this.lettings = lettings;
+    }
+
+    public Item getParent() {
+        return parent;
+    }
+
+    public Item parent(Item item) {
+        this.parent = item;
+        return this;
+    }
+
+    public void setParent(Item item) {
+        this.parent = item;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 

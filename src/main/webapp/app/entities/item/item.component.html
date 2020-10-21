@@ -26,6 +26,7 @@
                     <th scope="col" ><span jhiTranslate="bwManagementApp.item.qrCode">Qr Code</span></th>
                     <th scope="col" ><span jhiTranslate="bwManagementApp.item.description">Description</span></th>
                     <th scope="col" ><span jhiTranslate="bwManagementApp.item.picture">Picture</span></th>
+                    <th scope="col" ><span jhiTranslate="bwManagementApp.item.parent">Parent</span></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -37,6 +38,11 @@
                     <td>
                         <div *ngIf="item.picture">
                             <a [routerLink]="['/image', item.picture?.id, 'view']" >{{ item.picture?.id }}</a>
+                        </div>
+                    </td>
+                    <td>
+                        <div *ngIf="item.parent">
+                            <a [routerLink]="['/item', item.parent?.id, 'view']" >{{ item.parent?.id }}</a>
                         </div>
                     </td>
                     <td class="text-right">

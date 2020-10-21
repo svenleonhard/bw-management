@@ -5,6 +5,7 @@ import de.bildwerk.bwmanagement.domain.Item;
 import de.bildwerk.bwmanagement.domain.Image;
 import de.bildwerk.bwmanagement.domain.Content;
 import de.bildwerk.bwmanagement.domain.Letting;
+import de.bildwerk.bwmanagement.domain.Item;
 import de.bildwerk.bwmanagement.repository.ItemRepository;
 import de.bildwerk.bwmanagement.service.ItemService;
 import de.bildwerk.bwmanagement.service.dto.ItemCriteria;
@@ -455,6 +456,26 @@ public class ItemResourceIT {
 
         // Get all the itemList where letting equals to lettingId + 1
         defaultItemShouldNotBeFound("lettingId.equals=" + (lettingId + 1));
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllItemsByParentIsEqualToSomething() throws Exception {
+        // Initialize the database
+        itemRepository.saveAndFlush(item);
+        Item parent = ItemResourceIT.createEntity(em);
+        em.persist(parent);
+        em.flush();
+        item.setParent(parent);
+        itemRepository.saveAndFlush(item);
+        Long parentId = parent.getId();
+
+        // Get all the itemList where parent equals to parentId
+        defaultItemShouldBeFound("parentId.equals=" + parentId);
+
+        // Get all the itemList where parent equals to parentId + 1
+        defaultItemShouldNotBeFound("parentId.equals=" + (parentId + 1));
     }
 
     /**

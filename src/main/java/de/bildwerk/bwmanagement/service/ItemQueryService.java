@@ -103,6 +103,10 @@ public class ItemQueryService extends QueryService<Item> {
                 specification = specification.and(buildSpecification(criteria.getLettingId(),
                     root -> root.join(Item_.lettings, JoinType.LEFT).get(Letting_.id)));
             }
+            if (criteria.getParentId() != null) {
+                specification = specification.and(buildSpecification(criteria.getParentId(),
+                    root -> root.join(Item_.parent, JoinType.LEFT).get(Item_.id)));
+            }
         }
         return specification;
     }

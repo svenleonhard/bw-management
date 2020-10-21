@@ -30,6 +30,10 @@ relationship OneToOne {
   Item{picture} to Image
 }
 
+relationship ManyToOne{
+  Item{parent} to Item
+}
+
 relationship OneToMany {
   Item to Content{item},
   Item to Letting{item}

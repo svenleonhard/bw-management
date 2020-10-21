@@ -9,6 +9,7 @@ export interface IItem {
   picture?: IImage;
   contents?: IContent[];
   lettings?: ILetting[];
+  parent?: IItem;
 }
 
 export class Item implements IItem {
@@ -18,6 +19,7 @@ export class Item implements IItem {
     public description?: string,
     public picture?: IImage,
     public contents?: IContent[],
-    public lettings?: ILetting[]
+    public lettings?: ILetting[],
+    public parent?: IItem
   ) {}
 }

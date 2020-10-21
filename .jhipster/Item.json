@@ -36,6 +36,13 @@
       "otherEntityName": "letting",
       "otherEntityRelationshipName": "item",
       "relationshipName": "letting"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "item",
+      "otherEntityRelationshipName": "item",
+      "relationshipName": "parent",
+      "otherEntityField": "id"
     }
   ],
   "changelogDate": "20201016171647",

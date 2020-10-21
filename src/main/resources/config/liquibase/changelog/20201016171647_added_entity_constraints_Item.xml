@@ -14,5 +14,11 @@
                                  referencedColumnNames="id"
                                  referencedTableName="image"/>
 
+        <addForeignKeyConstraint baseColumnNames="parent_id"
+                                 baseTableName="item"
+                                 constraintName="fk_item_parent_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="item"/>
+
     </changeSet>
 </databaseChangeLog>
