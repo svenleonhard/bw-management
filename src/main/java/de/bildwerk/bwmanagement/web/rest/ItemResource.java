@@ -77,7 +77,7 @@ public class ItemResource {
         if (item.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (item.getId().equals(item.getParent().getId())){
+        if (item.getParent() != null && item.getId().equals(item.getParent().getId())){
             throw new BadRequestAlertException("Invalid parent", ENTITY_NAME, "parentEqualsChild");
         }
         Item result = itemService.save(item);

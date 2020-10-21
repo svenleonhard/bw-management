@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 import { LoginModalService } from 'app/core/login/login-modal.service';
 import { AccountService } from 'app/core/auth/account.service';
@@ -11,6 +11,7 @@ import { logger } from 'codelyzer/util/logger';
 import { AssignmentService } from 'app/entities/assignment/assignment.service';
 import { equals } from '@ngx-translate/core/lib/util';
 import { switchMap } from 'rxjs/operators';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'jhi-home',
@@ -45,30 +46,29 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   itemCodeSelected(itemCode: number): void {
-    this.assignmentService.query({ 'boxId.equals': itemCode }).subscribe(res => {
-      console.log('read assignments');
-      console.log(res.body);
+    console.log('item code selected');
 
-      if (res.body != null) {
-        this.subItems = res.body.map(assignment => assignment.boxItem).filter(boxItem => boxItem != undefined);
-
-        this.subItems = this.subItems.map(subItem => {
-          if (subItem && subItem.picture) {
-            subItem.picture.data = this.sanitizer.bypassSecurityTrustUrl('data:image/jpeg;base64,' + subItem.picture.data);
+    this.itemService
+      .find(itemCode)
+      .pipe(
+        switchMap(res => {
+          this.item = res.body || null;
+          console.log(res.body);
+          if (this.item && this.item.picture) {
+            const objectURL = 'data:image/jpeg;base64,' + this.item.picture.data;
+            this.picture = this.sanitizer.bypassSecurityTrustUrl(objectURL);
+            console.log(this.item);
           }
-          return subItem;
-        });
-        console.log(this.subItems);
-      }
-    });
-
-    this.itemService.find(itemCode).subscribe(res => {
-      this.item = res.body || null;
-      if (this.item && this.item.picture) {
-        const objectURL = 'data:image/jpeg;base64,' + this.item.picture.data;
-        this.picture = this.sanitizer.bypassSecurityTrustUrl(objectURL);
-      }
-    });
+          if (this.item) {
+            return this.itemService.query({ 'parentId.equals': this.item.id });
+          }
+          return new Observable<HttpResponse<IItem[]>>();
+        })
+      )
+      .subscribe(res => {
+        this.subItems = res.body;
+        console.log(res.body);
+      });
   }
 
   ngOnDestroy(): void {
