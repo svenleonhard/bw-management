@@ -137,6 +137,7 @@
     "emailexists": "Email is already in use!",
     "idexists": "A new {{ entityName }} cannot already have an ID",
     "idnull": "Invalid ID",
+    "parentEqualsChild": "Item cannot be assigned to itself",
     "file": {
       "could.not.extract": "Could not extract file",
       "not.image": "File was expected to be an image but was found to be \"{{ fileType }}\""
