@@ -29,7 +29,7 @@ export class ItemService {
 
   query(req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
-    console.log(options);
+    // console.log(options);
     return this.http.get<IItem[]>(this.resourceUrl, { params: options, observe: 'response' });
   }
 

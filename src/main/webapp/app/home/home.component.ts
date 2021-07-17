@@ -12,6 +12,8 @@ import { AssignmentService } from 'app/entities/assignment/assignment.service';
 import { equals } from '@ngx-translate/core/lib/util';
 import { switchMap } from 'rxjs/operators';
 import { HttpResponse } from '@angular/common/http';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FindItemModalComponent } from 'app/find-item-modal/find-item-modal.component';
 
 @Component({
   selector: 'jhi-home',
@@ -30,6 +32,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private loginModalService: LoginModalService,
     private itemService: ItemService,
     private sanitizer: DomSanitizer,
+    private modalService: NgbModal,
     private assignmentService: AssignmentService
   ) {}
 
@@ -46,18 +49,18 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   itemCodeSelected(itemCode: number): void {
-    console.log('item code selected');
+    // console.log('item code selected');
 
     this.itemService
       .find(itemCode)
       .pipe(
         switchMap(res => {
           this.item = res.body || null;
-          console.log(res.body);
+          // console.log(res.body);
           if (this.item && this.item.picture) {
             const objectURL = 'data:image/jpeg;base64,' + this.item.picture.data;
             this.picture = this.sanitizer.bypassSecurityTrustUrl(objectURL);
-            console.log(this.item);
+            // console.log(this.item);
           }
           if (this.item) {
             return this.itemService.query({ 'parentId.equals': this.item.id });
@@ -67,8 +70,15 @@ export class HomeComponent implements OnInit, OnDestroy {
       )
       .subscribe(res => {
         this.subItems = res.body;
-        console.log(res.body);
+        // console.log(res.body);
       });
+  }
+
+  openFindItemModal(): void {
+    const modalRef = this.modalService.open(FindItemModalComponent);
+    modalRef.componentInstance.passEntry.subscribe((itemId: any) => {
+      this.itemCodeSelected(itemId);
+    });
   }
 
   ngOnDestroy(): void {

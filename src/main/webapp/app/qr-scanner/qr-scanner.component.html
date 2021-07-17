@@ -1,8 +1,18 @@
 <div class="row">
-    <zxing-scanner  (scanSuccess)="onCodeResult($event)"></zxing-scanner>
-    <input type="number" class="col-sm-9 mt-1 form-control" [(ngModel)]="itemId" placeholder="Please enter Item ID"/>
-    <button type="button" class="ml-1 mt-1 btn btn-primary" (click)="onCodeSelected()">
-        <fa-icon icon="search"></fa-icon>&nbsp;<span jhiTranslate="entity.action.find">Find</span>
-    </button>
+    
+
+    <div class="col-lg-12">
+
+        <zxing-scanner  (scanSuccess)="onCodeResult($event)"></zxing-scanner>
+        <div class="input-group input-group-lg">
+            <input type="number" class="mt-1 mr-1 form-control input-lg" [(ngModel)]="itemId" placeholder="Please enter Item ID"/>
+        
+        <span class="input-group-btn">
+            <button class="btn mt-1 btn-primary btn-lg" type="button" (click)="onCodeSelected()"> <fa-icon icon="search"></fa-icon>&nbsp;<span jhiTranslate="entity.action.find">Find</span></button>
+          </span>
+        </div>
+            
+    </div>
+
 </div>
 
