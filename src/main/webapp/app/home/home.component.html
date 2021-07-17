@@ -22,12 +22,14 @@
                     a new account</a>
             </div>
 
+            <button id="jh-create-entity" *ngSwitchCase="true"
+            class="btn btn-primary float-right p-1" (click)="openFindItemModal()">
+        <fa-icon icon="search"></fa-icon>
+        <span>Find Item</span>
+</button>
+
         </div>
-        <button id="jh-create-entity"
-                class="btn btn-primary float-right p-1" (click)="openFindItemModal()">
-            <fa-icon icon="plus"></fa-icon>
-            <span>Find Item</span>
-    </button>
+
     </div>
 </div>
     <div class="row">
@@ -42,10 +44,15 @@
                     </div>
                     <div class="card-body">
                         <h5 class="card-title">{{ item.description }}</h5>
-                        <dt><span jhiTranslate="bwManagementApp.item.qrCode">Qr Code:</span></dt>
+                        <dt><span jhiTranslate="bwManagementApp.item.id">Item ID:</span></dt>
                         <dd>
                             <span>{{ item.id }}</span>
                         </dd>
+                        <ng-container *ngFor="let content of item.contents">
+                            <dd>
+                                <span>{{ content.description }}</span>
+                            </dd>
+                        </ng-container>
                     </div>
                 </div>
 

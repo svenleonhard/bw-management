@@ -16,6 +16,7 @@
       "detail": {
         "title": "Item"
       },
+      "id": "Item ID",
       "qrCode": "Qr Code",
       "description": "Description",
       "picture": "Picture",

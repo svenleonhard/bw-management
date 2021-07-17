@@ -14,6 +14,7 @@ import { switchMap } from 'rxjs/operators';
 import { HttpResponse } from '@angular/common/http';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FindItemModalComponent } from 'app/find-item-modal/find-item-modal.component';
+import { ContentService } from 'app/entities/content/content.service';
 
 @Component({
   selector: 'jhi-home',
@@ -31,6 +32,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private accountService: AccountService,
     private loginModalService: LoginModalService,
     private itemService: ItemService,
+    private contentService: ContentService,
     private sanitizer: DomSanitizer,
     private modalService: NgbModal,
     private assignmentService: AssignmentService
@@ -56,11 +58,9 @@ export class HomeComponent implements OnInit, OnDestroy {
       .pipe(
         switchMap(res => {
           this.item = res.body || null;
-          // console.log(res.body);
           if (this.item && this.item.picture) {
             const objectURL = 'data:image/jpeg;base64,' + this.item.picture.data;
             this.picture = this.sanitizer.bypassSecurityTrustUrl(objectURL);
-            // console.log(this.item);
           }
           if (this.item) {
             return this.itemService.query({ 'parentId.equals': this.item.id });
@@ -68,9 +68,19 @@ export class HomeComponent implements OnInit, OnDestroy {
           return new Observable<HttpResponse<IItem[]>>();
         })
       )
+      .pipe(
+        switchMap(res => {
+          this.subItems = res.body;
+          return this.contentService.query({ 'itemId.equals': this.item?.id });
+        })
+      )
       .subscribe(res => {
-        this.subItems = res.body;
-        // console.log(res.body);
+        if (this.item) {
+          this.item.contents = res.body || undefined;
+          console.log('contents');
+          console.log(this.item.contents);
+          console.log(res.body);
+        }
       });
   }
 
