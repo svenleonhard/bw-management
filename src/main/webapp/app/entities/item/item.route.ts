@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { Resolve, ActivatedRouteSnapshot, Routes, Router } from '@angular/router';
 import { Observable, of, EMPTY } from 'rxjs';
-import { flatMap } from 'rxjs/operators';
+import { flatMap, switchMap } from 'rxjs/operators';
 
 import { Authority } from 'app/shared/constants/authority.constants';
 import { UserRouteAccessService } from 'app/core/auth/user-route-access-service';
@@ -11,6 +11,7 @@ import { ItemService } from './item.service';
 import { ItemComponent } from './item.component';
 import { ItemDetailComponent } from './item-detail.component';
 import { ItemUpdateComponent } from './item-update.component';
+import { ItemChildComponent } from './item-child.component';
 
 @Injectable({ providedIn: 'root' })
 export class ItemResolve implements Resolve<IItem> {
@@ -47,6 +48,18 @@ export const itemRoute: Routes = [
   {
     path: ':id/view',
     component: ItemDetailComponent,
+    resolve: {
+      item: ItemResolve,
+    },
+    data: {
+      authorities: [Authority.USER],
+      pageTitle: 'bwManagementApp.item.home.title',
+    },
+    canActivate: [UserRouteAccessService],
+  },
+  {
+    path: ':id/sub',
+    component: ItemChildComponent,
     resolve: {
       item: ItemResolve,
     },

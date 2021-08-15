@@ -77,9 +77,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       .subscribe(res => {
         if (this.item) {
           this.item.contents = res.body || undefined;
-          console.log('contents');
-          console.log(this.item.contents);
-          console.log(res.body);
         }
       });
   }

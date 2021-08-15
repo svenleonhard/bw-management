@@ -1,0 +1,63 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="item">
+            <h2>{{ item.description }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+        
+                    <div class="card mt-3">
+                        <div class="card-header text-center">
+                            <img [src]="picture" />
+                        </div>
+                        <div class="card-body">
+                            <dt><span jhiTranslate="bwManagementApp.item.id">Item ID:</span></dt>
+                            <dd>
+                                <span>{{ item.id }}</span>
+                            </dd>
+                            <ng-container *ngIf="item.contents && item.contents.length>0">
+                                <dt><span>Content</span></dt>
+                            </ng-container>
+                            <ng-container *ngFor="let content of item.contents">
+                                <dd>
+                                    <span><a>{{ content.description }}</a></span>
+                                </dd>
+                            </ng-container>
+                        </div>
+                    </div>
+        
+
+
+                    <ng-container *ngIf="item">
+                        <h3 class="mt-3" *ngIf="subItems && subItems.length > 0">Sub Items</h3>
+                        </ng-container>
+
+                
+                <div class="row">
+        
+                    <ng-container *ngFor="let subItem of subItems">
+                        <div class="col-3 m-3 card">
+                            <div class="card-body">
+                                <h5 class="card-title" *ngIf="subItem != undefined">{{ subItem.description }}</h5>
+                                <dt><span jhiTranslate="bwManagementApp.item.id">Item ID:</span></dt>
+                                <p class="card-text" *ngIf="subItem != undefined">{{ subItem.id }}</p>
+                            </div>
+                        </div>
+        
+        
+                    </ng-container>
+        
+                </div>
+        
+
+        
+
+        
+        
+
+
+        </div>
+    </div>
+</div>
