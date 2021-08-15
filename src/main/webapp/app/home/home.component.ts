@@ -24,9 +24,7 @@ import { ContentService } from 'app/entities/content/content.service';
 export class HomeComponent implements OnInit, OnDestroy {
   account: Account | null = null;
   authSubscription?: Subscription;
-  item: IItem | null = null;
-  subItems: (IItem | undefined)[] | null = null;
-  picture: any | null = null;
+  items: (IItem | undefined)[] | null = null;
 
   constructor(
     private accountService: AccountService,
@@ -40,6 +38,21 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.authSubscription = this.accountService.getAuthenticationState().subscribe(account => (this.account = account));
+
+    this.itemService.query().subscribe(itemRes => {
+      this.items = itemRes.body;
+      this.items?.forEach(item => {
+        if (item && item.picture) {
+          const objectURL = 'data:image/jpeg;base64,' + item.picture.data;
+          item.picture.data = this.sanitizer.bypassSecurityTrustUrl(objectURL);
+        }
+        this.contentService.query({ 'itemId.equals': item?.id }).subscribe(contentRes => {
+          if (item) {
+            item.contents = contentRes.body || undefined;
+          }
+        });
+      });
+    });
   }
 
   isAuthenticated(): boolean {
@@ -50,42 +63,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.loginModalService.open();
   }
 
-  itemCodeSelected(itemCode: number): void {
-    // console.log('item code selected');
-
-    this.itemService
-      .find(itemCode)
-      .pipe(
-        switchMap(res => {
-          this.item = res.body || null;
-          if (this.item && this.item.picture) {
-            const objectURL = 'data:image/jpeg;base64,' + this.item.picture.data;
-            this.picture = this.sanitizer.bypassSecurityTrustUrl(objectURL);
-          }
-          if (this.item) {
-            return this.itemService.query({ 'parentId.equals': this.item.id });
-          }
-          return new Observable<HttpResponse<IItem[]>>();
-        })
-      )
-      .pipe(
-        switchMap(res => {
-          this.subItems = res.body;
-          return this.contentService.query({ 'itemId.equals': this.item?.id });
-        })
-      )
-      .subscribe(res => {
-        if (this.item) {
-          this.item.contents = res.body || undefined;
-        }
-      });
-  }
-
   openFindItemModal(): void {
     const modalRef = this.modalService.open(FindItemModalComponent);
-    modalRef.componentInstance.passEntry.subscribe((itemId: any) => {
-      this.itemCodeSelected(itemId);
-    });
+    modalRef.componentInstance.passEntry.subscribe((itemId: any) => {});
   }
 
   ngOnDestroy(): void {
